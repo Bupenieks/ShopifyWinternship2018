@@ -51,18 +51,30 @@ const retrieveApiData = page => {
 }
 
 const validate = (constraints, customers) => {
-    // Access each constraint object's main key, and evaluate it over each customer
-    for (let constraint in constraints) {
-        for (let key in constraint) {
-            for (let customer in customers) {
-
+    // Iterate through each customer and validate each constaint key
+    for (let customer in customers) {
+        for (let contraint in constraints) {
+            for (let key in constraint) {
+                if (customer[key]) {
+                    switch (key) {
+                        case "type":
+                            if (typeof customer[key] != contraint[key]) markAsInvalid(key, customer)
+                            break
+                        case "length":
+                            let keyLength = customer[key].length
+                            if (keyLength > contraint[key]["max"] || keyLength < contraint[key]["min"])
+                                markAsInvalid(key, customer)
+                            break
+                        default:
+                            console.err("Invalid key detected")
+                    }
+                } else if (contraint["required"]) {
+                    markAsInvalid("required", customer)
+                }
             }
         }
     }
-    // iterate through customers and check the v
-    for (let customer in customers) {
 
-    }
 }
 
 app.get('/validate/', (req, res) => {
@@ -79,6 +91,7 @@ app.get('/validate/', (req, res) => {
             if (!customers) {
                 console.log("No customers")
                 res.send({})
+                return
             }
 
             validate(constraints, customers)
