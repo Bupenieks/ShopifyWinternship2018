@@ -1,0 +1,15 @@
+{
+  "name": "backendproblem",
+  "version": "1.0.0",
+  "description": "Shopify winternship 2018 backend problem",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ben Upenieks",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4",
+    "request": "^2.81.0"
+  }
+}
