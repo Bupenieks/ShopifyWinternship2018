@@ -12,7 +12,7 @@ import static com.benupenieks.mobileproblem.SearchQuery.QueryType.StockItem;
 public class DataPresenter implements DataContract.Presenter {
 
     private DataContract.View mView;
-    private DataContract.Interactor mInteractor;
+    private DataContract.Interactor mInteractor = new DataInteractor();
 
     public void onSearch(String firstName, String lastName) {
         mInteractor.search(new SearchQuery(Customer, firstName, lastName), this, (Context) mView);

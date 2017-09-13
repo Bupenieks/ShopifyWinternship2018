@@ -2,6 +2,7 @@ package com.benupenieks.mobileproblem;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
         lastNameQuery = (EditText) findViewById(R.id.editTextLastName);
         stockQuery = (EditText) findViewById(R.id.editTextItemSold);
 
+        mPresenter = new DataPresenter();
+        mPresenter.attachView(this);
+
         findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,13 +45,16 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
         String firstName = firstNameQuery.getText().toString();
         String lastName = lastNameQuery.getText().toString();
         String stockItem = stockQuery.getText().toString();
+        String empty = "";
 
-        if ((firstName != null || lastName != null) && stockItem != null) {
+        Log.d("ASD", firstName + lastName + stockItem);
+
+        if ((!firstName.equals(empty) || !lastName.equals(empty)) && !stockItem.equals(empty)) {
             Toast.makeText(this, "Please only enter one query type.", Toast.LENGTH_SHORT).show();
             return;
-        } else if (firstName != null && lastName != null) {
+        } else if (!firstName.equals(empty) && !lastName.equals(empty)) {
             mPresenter.onSearch(firstName, lastName);
-        } else if (stockItem != null) {
+        } else if (!stockItem.equals(empty)) {
             mPresenter.onSearch(stockItem);
         } else {
             Toast.makeText(this, "Please enter a search query.", Toast.LENGTH_SHORT).show();

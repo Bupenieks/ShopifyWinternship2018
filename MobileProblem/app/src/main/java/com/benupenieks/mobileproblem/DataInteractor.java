@@ -33,44 +33,34 @@ public class DataInteractor implements DataContract.Interactor {
 
     private RequestQueue mRequestQueue = null;
 
-    public void search(SearchQuery query, final DataContract.Presenter listener, Context context) {
+    public void search(final SearchQuery query, final DataContract.Presenter listener, Context context) {
         if (mRequestQueue == null) mRequestQueue = Volley.newRequestQueue(context);
-        switch (query.getQueryType()) {
-            case Customer:
-                Response.Listener<JSONObject> customerResponseListener = new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("TAG", "JSON Response Received");
-                        listener.onSearchResult("CURSTOMER");
+        final Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("TAG", "JSON Response Received");
+                listener.onSearchResult("CURSTOMER");
                         /*try {
                             JSONArray items = response.getJSONArray("items");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }*/
-                    }
-                };
-                mRequestQueue.add(new JsonObjectRequest(Request.Method.GET, mRequestUrl, null,
-                        customerResponseListener, mErrorListener));
-                break;
-            case StockItem:
-                Response.Listener<JSONObject> stockResponseListener = new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("TAG", "JSON Response Received");
-                        listener.onSearchResult("CURSTOMER");
-                        /*try {
-                            JSONArray items = response.getJSONArray("items");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }*/
-                    }
-                };
-                mRequestQueue.add(new JsonObjectRequest(Request.Method.GET, mRequestUrl, null,
-                        stockResponseListener, mErrorListener));
-                break;
-            default:
-                Log.d(TAG, "Invalid search query received.");
-        }
+
+                switch (query.getQueryType()) {
+                    case Customer:
+                        break;
+                    case StockItem:
+
+                        break;
+                    default:
+                        Log.d(TAG, "Invalid search query received.");
+                }
+            }
+        };
+
+
+        mRequestQueue.add(new JsonObjectRequest(Request.Method.GET, mRequestUrl, null,
+                responseListener, mErrorListener));
     }
 }
 
