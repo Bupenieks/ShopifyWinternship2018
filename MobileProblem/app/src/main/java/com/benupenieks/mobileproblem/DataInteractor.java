@@ -39,21 +39,25 @@ public class DataInteractor implements DataContract.Interactor {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("TAG", "JSON Response Received");
+                JSONArray orders;
                 listener.onSearchResult("CURSTOMER");
-                        /*try {
-                            JSONArray items = response.getJSONArray("items");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }*/
+                try {
+                    orders = response.getJSONArray("orders");
+                    switch (query.getQueryType()) {
+                        case Customer:
 
-                switch (query.getQueryType()) {
-                    case Customer:
-                        break;
-                    case StockItem:
+                            for (int i = 0; i < orders.length(); i++) {
+                                JSONObject customer = orders.getJSONObject(i).getJSONObject("customer");
+                            }
+                            break;
+                        case StockItem:
 
-                        break;
-                    default:
-                        Log.d(TAG, "Invalid search query received.");
+                            break;
+                        default:
+                            Log.d(TAG, "Invalid search query received.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         };
