@@ -11,7 +11,9 @@ public interface DataContract {
     interface View {
         void search();
 
-        void updateQueryResults(String result);
+        void updateStockResults(String result);
+
+        void updateCustomerResults(String result);
     }
 
     interface Presenter {
@@ -23,7 +25,7 @@ public interface DataContract {
 
         void onSearch(String stockItem);
 
-        void onSearchResult(String result);
+        void onSearchResult(SearchQuery.QueryType queryType, String result);
     }
 
     interface Interactor{

@@ -12,7 +12,7 @@ import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements DataContract.View {
 
-    private TextView nameLabel, dataLabel;
+    private TextView customerDataLabel, stockDataLabel;
     private EditText firstNameQuery, lastNameQuery, stockQuery;
 
     private DataPresenter mPresenter;
@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        nameLabel = (TextView) findViewById(R.id.nameLabel);
-        dataLabel = (TextView) findViewById(R.id.dataLabel);
+        customerDataLabel = (TextView) findViewById(R.id.nameLabel);
+        stockDataLabel = (TextView) findViewById(R.id.dataLabel);
 
         firstNameQuery = (EditText) findViewById(R.id.editTextFirstName);
         lastNameQuery = (EditText) findViewById(R.id.editTextLastName);
@@ -62,8 +62,12 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
     }
 
     @Override
-    public void updateQueryResults(String result) {
-        dataLabel.setText(result);
+    public void updateCustomerResults(String result) {customerDataLabel.setText(result);
+    }
+
+    @Override
+    public void updateStockResults(String result) {
+        stockDataLabel.setText(result);
     }
 
     public void attachPresenter() {

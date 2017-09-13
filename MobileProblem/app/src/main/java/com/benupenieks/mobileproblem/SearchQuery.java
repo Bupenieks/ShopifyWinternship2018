@@ -10,7 +10,9 @@ public class SearchQuery {
     }
 
     private QueryType mQueryType;
-    private String mFirstName, mLastName, mStockItem;
+    private String mFirstName = null;
+    private String mLastName = null;
+    private String mStockItem = null;
 
     public SearchQuery(QueryType queryType, String firstName, String lastName) {
         mFirstName = firstName;
@@ -20,6 +22,7 @@ public class SearchQuery {
 
     public SearchQuery(QueryType queryType, String itemName) {
         mStockItem = itemName;
+        mQueryType = queryType;
     }
 
     public QueryType getQueryType() {

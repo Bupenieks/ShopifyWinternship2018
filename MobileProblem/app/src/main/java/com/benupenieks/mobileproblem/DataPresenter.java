@@ -22,8 +22,15 @@ public class DataPresenter implements DataContract.Presenter {
         mInteractor.search(new SearchQuery(StockItem, stockItem), this, (Context) mView);
     }
 
-    public void onSearchResult(String result) {
-        mView.updateQueryResults(result);
+    public void onSearchResult(SearchQuery.QueryType queryType, String result) {
+        switch (queryType) {
+            case Customer:
+                mView.updateCustomerResults(result);
+                break;
+            case StockItem:
+                mView.updateStockResults(result);
+                break;
+        }
     }
 
     @Override
