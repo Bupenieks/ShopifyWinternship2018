@@ -1,5 +1,12 @@
 "use strict";
 
+/*
+  Solutions to both the Mobile and Backend problems can also be found on my github:
+
+  github.com/bupenieks/ShopifyWinternship2018
+ */
+
+
 const http = require("http"),
   express = require("express"),
   path = require("path"),
@@ -16,14 +23,12 @@ server.listen(app.get("port"), () => {
   console.log("Express server listening on port " + app.get("port"));
 });
 
-const apiEndpoint =
-  "https://backend-challenge-winter-2017.herokuapp.com/customers.json";
+const apiEndpoint = "https://backend-challenge-winter-2017.herokuapp.com/customers.json";
 let invalidCustomers = [];
 
 const retrieveApiData = page => {
   return new Promise((resolve, reject) => {
     request(apiEndpoint + "?page=" + page, (err, result, html) => {
-      console.log(apiEndpoint + "?page=" + page);
       if (err) {
         reject(err);
       } else {
@@ -44,18 +49,18 @@ const validate = data => {
   let customers = data.customers,
     constraints = data.constraints;
 
-  console.log(customers);
-
   for (let customer of customers) {
+    let invalidKeys = [];
     for (let constraint of constraints) {
       for (let key in constraint) {
         if (customer[key] != null) {
           let constraintAttributes = constraint[key];
+          // Loop over each constraint's specifications and test against customer
           for (let attribute in constraintAttributes) {
             switch (attribute) {
               case "type":
                 if (typeof customer[key] != constraintAttributes[attribute]) {
-                  markAsInvalid(key, customer);
+                    invalidKeys.push(key)
                 }
                 break;
               case "length":
@@ -67,24 +72,29 @@ const validate = data => {
                   (maxLength && keyLength > maxLength) ||
                   (minLength && keyLength < minLength)
                 ) {
-                  markAsInvalid(key, customer);
+                    invalidKeys.push(key)
                 }
                 break;
             }
           }
         } else if (constraint[key]["required"]) {
-          markAsInvalid(key, customer);
+          invalidKeys.push(key)
         }
       }
+    }
+    // If we have aggregated invalid customers, add to return array
+    if (invalidKeys.length != 0) {
+        invalidCustomers.push({
+            id: customer.id,
+            invalid_fields: invalidKeys
+        })
     }
   }
 };
 
-const markAsInvalid = (key, customer) => {
-  invalidCustomers.push([key, customer.id]);
-};
-
+// '/validate' route initializes validation
 app.get("/validate/", (req, res) => {
+  // Send initial request to get pagination info, then loop
   request(apiEndpoint + "?page=1", (err, result, html) => {
     if (err) {
       res.status(400).send(err);
@@ -105,9 +115,7 @@ app.get("/validate/", (req, res) => {
         customers: customers
       });
 
-      let numPages = Math.ceil(
-          body["pagination"]["total"] / body["pagination"]["per_page"]
-        ),
+      let numPages = Math.ceil(body["pagination"]["total"] / body["pagination"]["per_page"]),
         requestCount = 1,
         caught = false;
 
@@ -115,8 +123,9 @@ app.get("/validate/", (req, res) => {
         retrieveApiData(i)
           .then(validate)
           .then(() => {
+            // send the response once all api responses have been validated and none have been rejected
             if (++requestCount == numPages && !caught) {
-              res.send(invalidCustomers);
+              res.send({invalidCustomers});
             }
           })
           .catch(msg => {
