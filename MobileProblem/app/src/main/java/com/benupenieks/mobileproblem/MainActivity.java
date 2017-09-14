@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        customerDataLabel = (TextView) findViewById(R.id.nameLabel);
-        stockDataLabel = (TextView) findViewById(R.id.dataLabel);
+        customerDataLabel = (TextView) findViewById(R.id.customerDataLabel);
+        stockDataLabel = (TextView) findViewById(R.id.stockDataLabel);
 
         firstNameQuery = (EditText) findViewById(R.id.editTextFirstName);
         lastNameQuery = (EditText) findViewById(R.id.editTextLastName);
@@ -49,16 +49,13 @@ public class MainActivity extends AppCompatActivity implements DataContract.View
 
         Log.d("ASD", firstName + lastName + stockItem);
 
-        if ((!firstName.equals(empty) || !lastName.equals(empty)) && !stockItem.equals(empty)) {
-            Toast.makeText(this, "Please only enter one query type.", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (!firstName.equals(empty) && !lastName.equals(empty)) {
+        if (!firstName.equals(empty) && !lastName.equals(empty)) {
             mPresenter.onSearch(firstName, lastName);
-        } else if (!stockItem.equals(empty)) {
-            mPresenter.onSearch(stockItem);
-        } else {
-            Toast.makeText(this, "Please enter a search query.", Toast.LENGTH_SHORT).show();
         }
+        if (!stockItem.equals(empty)) {
+            mPresenter.onSearch(stockItem);
+        }
+
     }
 
     @Override
