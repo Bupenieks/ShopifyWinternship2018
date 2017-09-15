@@ -33,7 +33,8 @@ public class DataInteractor implements DataContract.Interactor {
     };
 
     private RequestQueue mRequestQueue = null;
-
+    
+    //Note: Duplicate orders are included in total spent
     public void search(final SearchQuery query, final DataContract.Presenter listener, Context context) {
         if (mRequestQueue == null) mRequestQueue = Volley.newRequestQueue(context);
 
